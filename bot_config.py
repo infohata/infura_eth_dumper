@@ -1,3 +1,4 @@
+WALLET_FILENAME = 'wallet.json'
 DESTINATION_WALLET_ID = 0   # does not need private key
 CHECK_WALLET_ID = 1         # needs private key
 CHECK_INTERVAL = 30         # in seconds

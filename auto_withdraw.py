@@ -2,8 +2,8 @@ from time import sleep
 import cli_wallet, bot_config
 from datetime import datetime
 
-addresses = cli_wallet.load("wallet.json")
-
+wallet_filename = bot_config.WALLET_FILENAME if bot_config.WALLET_FILENAME and len(bot_config.WALLET_FILENAME) > 5 else "wallet.json"
+addresses = cli_wallet.load(wallet_filename)
 print("---[ ETH Auto Withdrawal Bot ]---")
 print("(C) 2024 Kestutis Januskevicius, github.com/infohata")
 print(f"This bot will be checking every {bot_config.CHECK_INTERVAL} seconds")
