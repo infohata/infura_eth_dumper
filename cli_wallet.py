@@ -1,5 +1,6 @@
 from typing import Any
 from web3 import Web3, exceptions as exceptions_web3
+from eth_account.datastructures import SignedTransaction
 import json, requests
 import infura
 
@@ -29,6 +30,8 @@ def help(args: list[str]) -> None:
         print("save [wallet.json]: save addresses to a json file")
         print("load [wallet.json]: load addresses from a json file")
         print("balance ID: check balance of an address")
+        print("transfer FROM_ID TO_ID value [max_gas]: transfer value from address to another, max_gas is optional, default 200 Gwei")
+        print("gas: check gas price of the network")
     elif args[0] in help_dict:
         print(help_dict[args[0]])
     else:
@@ -69,9 +72,34 @@ def load(filename: str) -> list[Any]:
 def balance(id: int, addresses: list[Any] = addresses) -> list[Any]:
     account = get_eth_address(addresses[id]['address'])
     raw_balance = web3.eth.get_balance(account)
-    float_balance = int(raw_balance) / 10 ** 18
+    float_balance = int(raw_balance) / (10 ** 18)
+    addresses[id]['balance'] = float_balance
     print(float_balance)
     return addresses
+
+def transfer(from_id: int, to_id: int, value: float, max_gas: float = 200, addresses: list[Any] = addresses) -> list[Any]:
+    from_account = get_eth_address(addresses[from_id]['address'])
+    to_account = get_eth_address(addresses[to_id]['address'])
+    nonce = web3.eth.get_transaction_count(from_account)
+    transaction = {
+        'type': '0x2',
+        'nonce': nonce,
+        'from': from_account,
+        'to': to_account,
+        'value': web3.to_wei(value, 'ether'),
+        'maxFeePerGas': web3.to_wei(max_gas, 'gwei'),
+        'maxPriorityFeePerGas': web3.to_wei(5, 'gwei'),
+        'chainId': web3.eth.chain_id,
+    }
+    transaction['gas'] = web3.eth.estimate_gas(transaction)
+    signed_transaction:SignedTransaction = web3.eth.account.sign_transaction(transaction, addresses[from_id]['pk'])
+    transaction_hash = web3.eth.send_raw_transaction(signed_transaction.rawTransaction)
+    print(f"Sent {value} from {from_account} to {to_account}, gas limit: {transaction['gas']}, transaction hash: {transaction_hash.hex()}")
+    return addresses
+
+def get_gas() -> float:
+    print(f'Gas price: {web3.eth.gas_price / (10 ** 18):0.12f}')
+    return web3.eth.gas_price
 
 print("---[ Basic ETH Command Line Interface Wallet ]---")
 print("(C) 2024 Kestutis Januskevicius, github.com/infohata")
@@ -120,3 +148,19 @@ while True:
             print(ERROR_ID_VALUE)
         except IndexError:
             print(ERROR_ID_INDEX)
+    if command == "transfer":
+        try:
+            from_id = int(args[0])
+            to_id = int(args[1])
+            value = float(args[2])
+            if len(args) > 3:
+                max_gas = float(args[3])
+            else:
+                max_gas = 200
+            addresses = transfer(from_id, to_id, value, max_gas, addresses)
+        except ValueError as error:
+            print(error)
+        except IndexError as error:
+            print(error)
+    if command == "gas":
+        get_gas()
