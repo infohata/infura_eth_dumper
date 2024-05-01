@@ -12,8 +12,8 @@ print(f"When there are more than {bot_config.ACCUMULATED_THRESHOLD} coins")
 print(f"all but {bot_config.LEAVE_FOR_FEES} will be transferred")
 print(f"to {addresses[bot_config.DESTINATION_WALLET_ID]['address']} address.")
 print("This bot will work indefinitely until interrupted with CTRL+C.")
-abort = input("""Press ENTER to start. If something above is not correct:
-      press CTRL+C now and go fix the bot_config.py file.""")
+print("If something above is not correct, press CTRL+C now and go fix the bot_config.py file.")
+abort = input("Press ENTER to start.")
 while abort == '':
     print(f"Now is: {datetime.now()}. Checking for balance...")
     addresses = cli_wallet.balance(bot_config.CHECK_WALLET_ID, addresses)
