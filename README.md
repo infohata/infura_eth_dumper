@@ -18,7 +18,7 @@ pip install -r requirements.txt
 
 ```env
 INFURA_API_KEY = 'Your Infura API key'
-INFURA_NETWORK = 'mainnet' # Network identifier, you should first try with `sepolia`
+INFURA_NETWORK = 'mainnet' # Network identifier, you should first try with 'sepolia'
 ```
 
 You can get Infura API key [here](https://app.infura.io/): 
