@@ -6,11 +6,29 @@ Create a .env file with the following configuraition
 
 ### Setup Python
 
-Create a Python virtual environment and install dependencies
+Create a Python virtual environment
 
 ```bash
 python3 -m venv venv
+```
+
+Activate virutal environment
+
+in Linux/MacOS:
+
+```bash
 source venv/bin/activate
+```
+
+in Windows:
+
+```cmd
+venv\Scripts\activate
+```
+
+Install dependencies
+
+```
 pip install -r requirements.txt
 ```
 

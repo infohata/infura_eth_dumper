@@ -13,7 +13,7 @@ print(f"When there are more than {bot_config.ACCUMULATED_THRESHOLD} coins")
 print(f"all but {bot_config.LEAVE_FOR_FEES} will be transferred")
 print(f"to {addresses[bot_config.DESTINATION_WALLET_ID]['address']} address.")
 print("This bot will work indefinitely until interrupted with CTRL+C.")
-if sys.argv and sys.argv[1] and sys.argv[1] == "run":
+if sys.argv and len(sys.argv) > 1 and sys.argv[1] == "run":
     abort = ''
 else:
     print("If something above is not correct, press CTRL+C now and go fix the bot_config.py file.")
